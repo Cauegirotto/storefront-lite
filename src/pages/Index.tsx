@@ -19,31 +19,57 @@ const Index = () => {
       <Header onCartOpen={() => setIsCartOpen(true)} />
       
       {/* Hero Section */}
-      <section className="relative h-[400px] overflow-hidden">
+      <section className="relative h-[500px] overflow-hidden">
         <div className="absolute inset-0">
           <img
             src={heroBanner}
-            alt="Banner da loja"
+            alt="Banner Infinity Tech"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/90 to-background/50" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/95 to-background/40" />
         </div>
         <div className="relative container h-full flex flex-col justify-center items-start text-left space-y-4">
-          <h1 className="text-4xl md:text-6xl font-bold max-w-2xl">
-            Encontre os Melhores
-            <span className="block bg-gradient-primary bg-clip-text text-transparent">
-              Produtos Aqui
+          <h1 className="text-5xl md:text-7xl font-bold max-w-3xl">
+            <span className="bg-gradient-primary bg-clip-text text-transparent">
+              Infinity Tech
             </span>
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-xl">
-            Tecnologia de ponta com os melhores preços do mercado
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl">
+            Tecnologia infinita, possibilidades infinitas. Encontre os melhores produtos com os melhores preços.
           </p>
         </div>
       </section>
 
-      {/* Search Section */}
-      <section className="py-8 bg-gradient-subtle">
+      {/* Video Section */}
+      <section className="py-16 bg-gradient-subtle">
         <div className="container">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 bg-gradient-primary bg-clip-text text-transparent">
+              Conheça Nossa Tecnologia
+            </h2>
+            <p className="text-center text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Veja como a Infinity Tech está revolucionando o mercado de tecnologia
+            </p>
+            <div className="relative aspect-video rounded-xl overflow-hidden shadow-elegant border border-primary/20">
+              <iframe
+                className="w-full h-full"
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                title="Vídeo Institucional Infinity Tech"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Search Section */}
+      <section className="py-12 bg-background">
+        <div className="container">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-bold mb-2">Busque Seus Produtos</h2>
+            <p className="text-muted-foreground">Encontre exatamente o que você precisa</p>
+          </div>
           <SearchBar value={searchTerm} onChange={setSearchTerm} />
         </div>
       </section>
@@ -85,7 +111,8 @@ const Index = () => {
       {/* Footer */}
       <footer className="border-t py-8 bg-muted/30">
         <div className="container text-center text-muted-foreground">
-          <p>&copy; 2024 Loja Online. Todos os direitos reservados.</p>
+          <p className="font-semibold text-foreground mb-1">Infinity Tech</p>
+          <p>&copy; 2024 Infinity Tech. Todos os direitos reservados.</p>
         </div>
       </footer>
     </div>

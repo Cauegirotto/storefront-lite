@@ -98,10 +98,17 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-subtle p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="text-2xl">Bem-vindo</CardTitle>
-          <CardDescription>Entre ou crie sua conta</CardDescription>
+      <Card className="w-full max-w-md shadow-elegant border-primary/20">
+        <CardHeader className="text-center space-y-3">
+          <div className="mx-auto w-16 h-16 rounded-full bg-gradient-primary flex items-center justify-center">
+            <span className="text-3xl">🛒</span>
+          </div>
+          <CardTitle className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+            Infinity Tech
+          </CardTitle>
+          <CardDescription className="text-base">
+            Entre ou crie sua conta para começar a comprar ou vender
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="signin">

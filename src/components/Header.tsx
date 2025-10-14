@@ -21,7 +21,7 @@ export const Header = ({ onCartOpen }: HeaderProps) => {
         <div className="flex items-center gap-2">
           <Store className="h-6 w-6 text-primary" />
           <h1 className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-            Loja Online
+            Infinity Tech
           </h1>
         </div>
         

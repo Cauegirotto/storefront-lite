@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import { TrendingUp, Package, DollarSign, ShoppingCart } from 'lucide-react';
 
 const productSchema = z.object({
   name: z.string().min(3, 'Nome deve ter no mínimo 3 caracteres'),
@@ -24,6 +25,12 @@ const Seller = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState<any[]>([]);
+  const [stats, setStats] = useState({
+    totalProducts: 0,
+    totalRevenue: 0,
+    totalStock: 0,
+    averagePrice: 0
+  });
   
   const [productData, setProductData] = useState({
     name: '',
@@ -58,7 +65,22 @@ const Seller = () => {
       toast.error('Erro ao carregar produtos');
     } else {
       setProducts(data || []);
+      calculateStats(data || []);
     }
+  };
+
+  const calculateStats = (productList: any[]) => {
+    const totalProducts = productList.length;
+    const totalStock = productList.reduce((sum, p) => sum + p.stock, 0);
+    const totalRevenue = productList.reduce((sum, p) => sum + (p.price * p.stock), 0);
+    const averagePrice = totalProducts > 0 ? totalRevenue / totalStock : 0;
+
+    setStats({
+      totalProducts,
+      totalRevenue,
+      totalStock,
+      averagePrice
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -139,7 +161,54 @@ const Seller = () => {
         </div>
       </header>
 
-      <div className="container py-8">
+      <div className="container py-8 space-y-8">
+        {/* Dashboard Stats */}
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total de Produtos</CardTitle>
+              <Package className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.totalProducts}</div>
+              <p className="text-xs text-muted-foreground">produtos cadastrados</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Estoque Total</CardTitle>
+              <ShoppingCart className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.totalStock}</div>
+              <p className="text-xs text-muted-foreground">unidades disponíveis</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Valor em Estoque</CardTitle>
+              <DollarSign className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">R$ {stats.totalRevenue.toFixed(2)}</div>
+              <p className="text-xs text-muted-foreground">valor total dos produtos</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Preço Médio</CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">R$ {stats.averagePrice.toFixed(2)}</div>
+              <p className="text-xs text-muted-foreground">por unidade</p>
+            </CardContent>
+          </Card>
+        </div>
+
         <div className="grid gap-8 md:grid-cols-2">
           <Card>
             <CardHeader>

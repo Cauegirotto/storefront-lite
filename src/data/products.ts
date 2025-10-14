@@ -60,5 +60,59 @@ export const products: Product[] = [
     image: productMouse,
     stock: 25,
     category: 'Periféricos'
+  },
+  {
+    id: '7',
+    name: 'Teclado Mecânico Pro',
+    description: 'Teclado mecânico com switches premium e retroiluminação RGB',
+    price: 699.90,
+    image: productMouse,
+    stock: 18,
+    category: 'Periféricos'
+  },
+  {
+    id: '8',
+    name: 'Monitor 4K 27"',
+    description: 'Monitor Ultra HD com tecnologia IPS e taxa de atualização de 144Hz',
+    price: 2499.90,
+    image: productLaptop,
+    stock: 10,
+    category: 'Monitores'
+  },
+  {
+    id: '9',
+    name: 'Webcam Full HD',
+    description: 'Webcam profissional com microfone integrado e autofoco',
+    price: 449.90,
+    image: productCamera,
+    stock: 22,
+    category: 'Periféricos'
+  },
+  {
+    id: '10',
+    name: 'SSD 1TB NVMe',
+    description: 'Armazenamento de alta velocidade com tecnologia NVMe Gen 4',
+    price: 799.90,
+    image: productTablet,
+    stock: 30,
+    category: 'Armazenamento'
+  },
+  {
+    id: '11',
+    name: 'Headset Gamer 7.1',
+    description: 'Headset surround 7.1 virtual com microfone retrátil',
+    price: 399.90,
+    image: productHeadphones,
+    stock: 16,
+    category: 'Áudio'
+  },
+  {
+    id: '12',
+    name: 'Cadeira Gamer Ergonômica',
+    description: 'Cadeira com ajuste de altura, apoio lombar e braços 4D',
+    price: 1299.90,
+    image: productSmartwatch,
+    stock: 7,
+    category: 'Mobiliário'
   }
 ];
