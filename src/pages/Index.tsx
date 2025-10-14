@@ -1,14 +1,55 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Header } from '@/components/Header';
 import { SearchBar } from '@/components/SearchBar';
 import { ProductCard } from '@/components/ProductCard';
 import { Cart } from '@/components/Cart';
-import { products } from '@/data/products';
+import { supabase } from '@/integrations/supabase/client';
 import heroBanner from '@/assets/hero-banner.jpg';
+import { Smartphone } from 'lucide-react';
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProducts();
+    
+    // Realtime subscription for new products
+    const channel = supabase
+      .channel('products-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'products'
+        },
+        () => {
+          fetchProducts();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .gt('stock', 0)
+      .order('created_at', { ascending: false });
+
+    if (!error && data) {
+      setProducts(data);
+    }
+    setLoading(false);
+  };
 
   const filteredProducts = products.filter((product) =>
     product.stock > 0 && product.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -40,24 +81,20 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Video Section */}
-      <section className="py-16 bg-gradient-subtle">
+      {/* Phone Animation Section */}
+      <section className="py-16 bg-gradient-subtle overflow-hidden">
         <div className="container">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 bg-gradient-primary bg-clip-text text-transparent">
-              Conheça Nossa Tecnologia
+              Tecnologia na Palma da Sua Mão
             </h2>
             <p className="text-center text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Veja como a Infinity Tech está revolucionando o mercado de tecnologia
+              Compre de onde estiver, quando quiser. A melhor experiência mobile.
             </p>
-            <div className="relative aspect-video rounded-xl overflow-hidden shadow-elegant border border-primary/20">
-              <iframe
-                className="w-full h-full"
-                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                title="Vídeo Institucional Infinity Tech"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+            <div className="relative h-[400px] flex items-center justify-center">
+              <div className="phone-float">
+                <Smartphone className="w-48 h-48 text-primary drop-shadow-glow" strokeWidth={1.5} />
+              </div>
             </div>
           </div>
         </div>
@@ -86,19 +123,31 @@ const Index = () => {
             </p>
           </div>
 
-          {filteredProducts.length === 0 ? (
+          {loading ? (
+            <div className="text-center py-16">
+              <p className="text-xl text-muted-foreground">Carregando produtos...</p>
+            </div>
+          ) : filteredProducts.length === 0 ? (
             <div className="text-center py-16">
               <p className="text-xl text-muted-foreground">
-                Nenhum produto encontrado com "{searchTerm}"
+                {searchTerm ? `Nenhum produto encontrado com "${searchTerm}"` : 'Nenhum produto disponível'}
               </p>
-              <p className="text-muted-foreground mt-2">
-                Tente buscar por outro termo
-              </p>
+              {searchTerm && (
+                <p className="text-muted-foreground mt-2">
+                  Tente buscar por outro termo
+                </p>
+              )}
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard 
+                  key={product.id} 
+                  product={{
+                    ...product,
+                    image: product.image_url || '/placeholder.svg'
+                  }} 
+                />
               ))}
             </div>
           )}
