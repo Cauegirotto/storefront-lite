@@ -58,7 +58,6 @@ const Seller = () => {
     const { data, error } = await supabase
       .from('products')
       .select('*')
-      .eq('seller_id', user!.id)
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -154,7 +153,7 @@ const Seller = () => {
     <div className="min-h-screen bg-gradient-subtle">
       <header className="border-b bg-background/95 backdrop-blur">
         <div className="container flex items-center justify-between h-16">
-          <h1 className="text-2xl font-bold">Painel do Vendedor</h1>
+          <h1 className="text-2xl font-bold">Dashboard Geral - Todos os Vendedores</h1>
           <Button variant="outline" onClick={() => navigate('/')}>
             Voltar à Loja
           </Button>
@@ -293,7 +292,7 @@ const Seller = () => {
           <div className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>Meus Produtos</CardTitle>
+                <CardTitle>Todos os Produtos</CardTitle>
                 <CardDescription>
                   {products.length} {products.length === 1 ? 'produto cadastrado' : 'produtos cadastrados'}
                 </CardDescription>

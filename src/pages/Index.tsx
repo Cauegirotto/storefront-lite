@@ -5,7 +5,6 @@ import { ProductCard } from '@/components/ProductCard';
 import { Cart } from '@/components/Cart';
 import { supabase } from '@/integrations/supabase/client';
 import heroBanner from '@/assets/hero-banner.jpg';
-import { Smartphone } from 'lucide-react';
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -78,25 +77,6 @@ const Index = () => {
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl">
             Tecnologia infinita, possibilidades infinitas. Encontre os melhores produtos com os melhores preços.
           </p>
-        </div>
-      </section>
-
-      {/* Phone Animation Section */}
-      <section className="py-16 bg-gradient-subtle overflow-hidden">
-        <div className="container">
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 bg-gradient-primary bg-clip-text text-transparent">
-              Tecnologia na Palma da Sua Mão
-            </h2>
-            <p className="text-center text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Compre de onde estiver, quando quiser. A melhor experiência mobile.
-            </p>
-            <div className="relative h-[400px] flex items-center justify-center">
-              <div className="phone-float">
-                <Smartphone className="w-48 h-48 text-primary drop-shadow-glow" strokeWidth={1.5} />
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
