@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { z } from 'zod';
-import { TrendingUp, Package, DollarSign, ShoppingCart } from 'lucide-react';
+import { TrendingUp, Package, DollarSign, ShoppingCart, Pencil } from 'lucide-react';
 
 const productSchema = z.object({
   name: z.string().min(3, 'Nome deve ter no mínimo 3 caracteres'),
@@ -25,6 +25,7 @@ const Seller = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState<any[]>([]);
+  const [editingProductId, setEditingProductId] = useState<string | null>(null);
   const [stats, setStats] = useState({
     totalProducts: 0,
     totalRevenue: 0,
@@ -94,31 +95,55 @@ const Seller = () => {
 
       setLoading(true);
 
-      const { error } = await supabase
-        .from('products')
-        .insert([{
-          seller_id: user!.id,
-          name: validatedData.name,
-          description: validatedData.description,
-          price: validatedData.price,
-          stock: validatedData.stock,
-          category: validatedData.category,
-          image_url: validatedData.image_url || null
-        }]);
+      if (editingProductId) {
+        // Update existing product
+        const { error } = await supabase
+          .from('products')
+          .update({
+            name: validatedData.name,
+            description: validatedData.description,
+            price: validatedData.price,
+            stock: validatedData.stock,
+            category: validatedData.category,
+            image_url: validatedData.image_url || null
+          })
+          .eq('id', editingProductId);
 
-      if (error) {
-        toast.error('Erro ao cadastrar produto');
+        if (error) {
+          toast.error('Erro ao atualizar produto');
+        } else {
+          toast.success('Produto atualizado com sucesso!');
+          handleCancelEdit();
+          fetchProducts();
+        }
       } else {
-        toast.success('Produto cadastrado com sucesso!');
-        setProductData({
-          name: '',
-          description: '',
-          price: '',
-          stock: '',
-          category: '',
-          image_url: ''
-        });
-        fetchProducts();
+        // Insert new product
+        const { error } = await supabase
+          .from('products')
+          .insert([{
+            seller_id: user!.id,
+            name: validatedData.name,
+            description: validatedData.description,
+            price: validatedData.price,
+            stock: validatedData.stock,
+            category: validatedData.category,
+            image_url: validatedData.image_url || null
+          }]);
+
+        if (error) {
+          toast.error('Erro ao cadastrar produto');
+        } else {
+          toast.success('Produto cadastrado com sucesso!');
+          setProductData({
+            name: '',
+            description: '',
+            price: '',
+            stock: '',
+            category: '',
+            image_url: ''
+          });
+          fetchProducts();
+        }
       }
     } catch (err) {
       if (err instanceof z.ZodError) {
@@ -127,6 +152,30 @@ const Seller = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleEdit = (product: any) => {
+    setEditingProductId(product.id);
+    setProductData({
+      name: product.name,
+      description: product.description,
+      price: product.price.toString(),
+      stock: product.stock.toString(),
+      category: product.category,
+      image_url: product.image_url || ''
+    });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingProductId(null);
+    setProductData({
+      name: '',
+      description: '',
+      price: '',
+      stock: '',
+      category: '',
+      image_url: ''
+    });
   };
 
   const handleDelete = async (productId: string) => {
@@ -211,8 +260,10 @@ const Seller = () => {
         <div className="grid gap-8 md:grid-cols-2">
           <Card>
             <CardHeader>
-              <CardTitle>Cadastrar Novo Produto</CardTitle>
-              <CardDescription>Preencha os dados do produto</CardDescription>
+              <CardTitle>{editingProductId ? 'Editar Produto' : 'Cadastrar Novo Produto'}</CardTitle>
+              <CardDescription>
+                {editingProductId ? 'Atualize os dados do produto' : 'Preencha os dados do produto'}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -282,9 +333,16 @@ const Seller = () => {
                   />
                 </div>
 
-                <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? 'Cadastrando...' : 'Cadastrar Produto'}
-                </Button>
+                <div className="flex gap-2">
+                  <Button type="submit" className="flex-1" disabled={loading}>
+                    {loading ? (editingProductId ? 'Atualizando...' : 'Cadastrando...') : (editingProductId ? 'Atualizar Produto' : 'Cadastrar Produto')}
+                  </Button>
+                  {editingProductId && (
+                    <Button type="button" variant="outline" onClick={handleCancelEdit}>
+                      Cancelar
+                    </Button>
+                  )}
+                </div>
               </form>
             </CardContent>
           </Card>
@@ -307,7 +365,7 @@ const Seller = () => {
                     products.map((product) => (
                       <Card key={product.id}>
                         <CardContent className="pt-6">
-                          <div className="flex justify-between items-start">
+                            <div className="flex justify-between items-start gap-2">
                             <div className="flex-1">
                               <h3 className="font-semibold">{product.name}</h3>
                               <p className="text-sm text-muted-foreground mt-1">
@@ -319,13 +377,22 @@ const Seller = () => {
                                 <span className="text-muted-foreground">{product.category}</span>
                               </div>
                             </div>
-                            <Button
-                              variant="destructive"
-                              size="sm"
-                              onClick={() => handleDelete(product.id)}
-                            >
-                              Excluir
-                            </Button>
+                            <div className="flex gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleEdit(product)}
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="destructive"
+                                size="sm"
+                                onClick={() => handleDelete(product.id)}
+                              >
+                                Excluir
+                              </Button>
+                            </div>
                           </div>
                         </CardContent>
                       </Card>
