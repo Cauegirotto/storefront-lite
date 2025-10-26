@@ -4,7 +4,11 @@ import { SearchBar } from '@/components/SearchBar';
 import { ProductCard } from '@/components/ProductCard';
 import { Cart } from '@/components/Cart';
 import { supabase } from '@/integrations/supabase/client';
-import heroBanner from '@/assets/hero-banner.jpg';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import Autoplay from 'embla-carousel-autoplay';
+import carouselPhone from '@/assets/carousel-phone.jpg';
+import carouselLaptop from '@/assets/carousel-laptop.jpg';
+import carouselPeripherals from '@/assets/carousel-peripherals.jpg';
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -60,24 +64,80 @@ const Index = () => {
       
       {/* Hero Section */}
       <section className="relative h-[500px] overflow-hidden">
-        <div className="absolute inset-0">
-          <img
-            src={heroBanner}
-            alt="Banner Infinity Tech"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/95 to-background/40" />
-        </div>
-        <div className="relative container h-full flex flex-col justify-center items-start text-left space-y-4">
-          <h1 className="text-5xl md:text-7xl font-bold max-w-3xl">
-            <span className="bg-gradient-primary bg-clip-text text-transparent">
-              Infinity Tech
-            </span>
-          </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl">
-            Tecnologia infinita, possibilidades infinitas. Encontre os melhores produtos com os melhores preços.
-          </p>
-        </div>
+        <Carousel
+          opts={{ loop: true }}
+          plugins={[
+            Autoplay({
+              delay: 3000,
+            }),
+          ]}
+          className="w-full h-full"
+        >
+          <CarouselContent>
+            <CarouselItem>
+              <div className="relative h-[500px] w-full">
+                <img
+                  src={carouselPhone}
+                  alt="Smartphones"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-background/95 to-background/40" />
+                <div className="absolute inset-0 container flex flex-col justify-center items-start text-left space-y-4">
+                  <h1 className="text-5xl md:text-7xl font-bold max-w-3xl">
+                    <span className="bg-gradient-primary bg-clip-text text-transparent">
+                      Infinity Tech
+                    </span>
+                  </h1>
+                  <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl">
+                    Os melhores smartphones do mercado
+                  </p>
+                </div>
+              </div>
+            </CarouselItem>
+            <CarouselItem>
+              <div className="relative h-[500px] w-full">
+                <img
+                  src={carouselLaptop}
+                  alt="Notebooks"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-background/95 to-background/40" />
+                <div className="absolute inset-0 container flex flex-col justify-center items-start text-left space-y-4">
+                  <h1 className="text-5xl md:text-7xl font-bold max-w-3xl">
+                    <span className="bg-gradient-primary bg-clip-text text-transparent">
+                      Infinity Tech
+                    </span>
+                  </h1>
+                  <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl">
+                    Notebooks potentes para sua produtividade
+                  </p>
+                </div>
+              </div>
+            </CarouselItem>
+            <CarouselItem>
+              <div className="relative h-[500px] w-full">
+                <img
+                  src={carouselPeripherals}
+                  alt="Periféricos"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-background/95 to-background/40" />
+                <div className="absolute inset-0 container flex flex-col justify-center items-start text-left space-y-4">
+                  <h1 className="text-5xl md:text-7xl font-bold max-w-3xl">
+                    <span className="bg-gradient-primary bg-clip-text text-transparent">
+                      Infinity Tech
+                    </span>
+                  </h1>
+                  <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl">
+                    Periféricos premium para gamers e profissionais
+                  </p>
+                </div>
+              </div>
+            </CarouselItem>
+          </CarouselContent>
+          <CarouselPrevious className="left-4" />
+          <CarouselNext className="right-4" />
+        </Carousel>
       </section>
 
       {/* Search Section */}
@@ -140,8 +200,8 @@ const Index = () => {
       {/* Footer */}
       <footer className="border-t py-8 bg-muted/30">
         <div className="container text-center text-muted-foreground">
-          <p className="font-semibold text-foreground mb-1">Infinity Tech</p>
-          <p>&copy; 2024 Infinity Tech. Todos os direitos reservados.</p>
+          <p className="font-semibold text-foreground mb-1">Infinity Tech Unimar</p>
+          <p>&copy; 2025 Infinity Tech. Todos os direitos reservados.</p>
         </div>
       </footer>
     </div>
