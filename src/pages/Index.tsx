@@ -4,11 +4,13 @@ import { SearchBar } from '@/components/SearchBar';
 import { ProductCard } from '@/components/ProductCard';
 import { Cart } from '@/components/Cart';
 import { supabase } from '@/integrations/supabase/client';
+import { apiClient } from '@/lib/apiClient';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
 import carouselPhone from '@/assets/carousel-phone.jpg';
 import carouselLaptop from '@/assets/carousel-laptop.jpg';
 import carouselPeripherals from '@/assets/carousel-peripherals.jpg';
+import { ApiResponse } from '@/types/api';
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -42,14 +44,18 @@ const Index = () => {
 
   const fetchProducts = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('products')
-      .select('*')
-      .gt('stock', 0)
-      .order('created_at', { ascending: false });
-
-    if (!error && data) {
-      setProducts(data);
+    try {
+      const baseUrl = import.meta.env.VITE_SUPABASE_URL;
+      apiClient.setBaseURL(`${baseUrl}/functions/v1`);
+      
+      const response = await apiClient.get<ApiResponse<any[]>>('/get-products');
+      
+      if (response.success && response.data) {
+        setProducts(response.data);
+      }
+    } catch (error) {
+      console.error('Erro ao buscar produtos:', error);
+      setProducts([]);
     }
     setLoading(false);
   };
