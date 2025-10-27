@@ -158,13 +158,11 @@ const Index = () => {
       {/* Search Section */}
       <section className="py-12 bg-background">
         <div className="container">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold mb-2">Busque Seus Produtos</h2>
-            <p className="text-muted-foreground">Encontre exatamente o que você precisa</p>
-          </div>
-          <SearchBar value={searchTerm} onChange={setSearchTerm} />
-          
-          <div className="flex justify-center mt-6">
+          <div className="flex justify-between items-start mb-6">
+            <div className="text-left">
+              <h2 className="text-2xl font-bold mb-2">Busque Seus Produtos</h2>
+              <p className="text-muted-foreground">Encontre exatamente o que você precisa</p>
+            </div>
             <select 
               value={sortBy} 
               onChange={(e) => setSortBy(e.target.value as 'name' | 'price-asc' | 'price-desc')}
@@ -175,6 +173,7 @@ const Index = () => {
               <option value="price-desc">Preço: Maior para Menor</option>
             </select>
           </div>
+          <SearchBar value={searchTerm} onChange={setSearchTerm} />
         </div>
       </section>
 
