@@ -17,6 +17,7 @@ const Index = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [sortBy, setSortBy] = useState<'name' | 'price-asc' | 'price-desc'>('name');
 
   useEffect(() => {
     fetchProducts();
@@ -60,9 +61,19 @@ const Index = () => {
     setLoading(false);
   };
 
-  const filteredProducts = products.filter((product) =>
-    product.stock > 0 && product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredProducts = products
+    .filter((product) =>
+      product.stock > 0 && product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (sortBy === 'name') {
+        return a.name.localeCompare(b.name);
+      } else if (sortBy === 'price-asc') {
+        return Number(a.price) - Number(b.price);
+      } else {
+        return Number(b.price) - Number(a.price);
+      }
+    });
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -152,6 +163,18 @@ const Index = () => {
             <p className="text-muted-foreground">Encontre exatamente o que você precisa</p>
           </div>
           <SearchBar value={searchTerm} onChange={setSearchTerm} />
+          
+          <div className="flex justify-center mt-6">
+            <select 
+              value={sortBy} 
+              onChange={(e) => setSortBy(e.target.value as 'name' | 'price-asc' | 'price-desc')}
+              className="px-4 py-2 rounded-lg border border-input bg-background text-foreground"
+            >
+              <option value="name">Ordenar: A-Z</option>
+              <option value="price-asc">Preço: Menor para Maior</option>
+              <option value="price-desc">Preço: Maior para Menor</option>
+            </select>
+          </div>
         </div>
       </section>
 
@@ -159,7 +182,7 @@ const Index = () => {
       <main className="flex-1 py-12">
         <div className="container">
           <div className="mb-8">
-            <h2 className="text-3xl font-bold mb-2">Nossos Produtos</h2>
+            <h2 className="text-3xl font-bold mb-2">Produtos</h2>
             <p className="text-muted-foreground">
               {filteredProducts.length === 0
                 ? 'Nenhum produto encontrado'
