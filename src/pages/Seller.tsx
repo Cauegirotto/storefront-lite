@@ -110,7 +110,8 @@ const Seller = () => {
           .eq('id', editingProductId);
 
         if (error) {
-          toast.error('Erro ao atualizar produto');
+          console.error('Erro ao atualizar produto:', error);
+          toast.error(`Erro ao atualizar produto: ${error.message}`);
         } else {
           toast.success('Produto atualizado com sucesso!');
           handleCancelEdit();
@@ -131,7 +132,8 @@ const Seller = () => {
           }]);
 
         if (error) {
-          toast.error('Erro ao cadastrar produto');
+          console.error('Erro ao cadastrar produto:', error);
+          toast.error(`Erro ao cadastrar produto: ${error.message}`);
         } else {
           toast.success('Produto cadastrado com sucesso!');
           setProductData({
@@ -148,6 +150,9 @@ const Seller = () => {
     } catch (err) {
       if (err instanceof z.ZodError) {
         toast.error(err.errors[0].message);
+      } else {
+        console.error('Erro inesperado:', err);
+        toast.error('Erro inesperado ao processar o produto');
       }
     } finally {
       setLoading(false);
