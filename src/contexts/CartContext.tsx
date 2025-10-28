@@ -5,8 +5,8 @@ import { toast } from 'sonner';
 interface CartContextType {
   cart: CartItem[];
   addToCart: (product: Product) => void;
-  removeFromCart: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  removeFromCart: (productId: number) => void;
+  updateQuantity: (productId: number, quantity: number) => void;
   clearCart: () => void;
   getCartTotal: () => number;
   getCartCount: () => number;
@@ -29,10 +29,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const existingItem = prevCart.find((item) => item.id === product.id);
       
       if (existingItem) {
-        if (existingItem.quantity >= product.stock) {
-          toast.error('Quantidade máxima atingida');
-          return prevCart;
-        }
         toast.success('Quantidade atualizada no carrinho');
         return prevCart.map((item) =>
           item.id === product.id
@@ -46,12 +42,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
-  const removeFromCart = (productId: string) => {
+  const removeFromCart = (productId: number) => {
     setCart((prevCart) => prevCart.filter((item) => item.id !== productId));
     toast.success('Produto removido do carrinho');
   };
 
-  const updateQuantity = (productId: string, quantity: number) => {
+  const updateQuantity = (productId: number, quantity: number) => {
     if (quantity <= 0) {
       removeFromCart(productId);
       return;

@@ -45,12 +45,12 @@ export const Cart = ({ isOpen, onClose }: CartProps) => {
                 <div key={item.id} className="flex gap-4 p-4 rounded-lg border bg-card">
                   <img
                     src={item.image}
-                    alt={item.name}
+                    alt={item.title}
                     className="h-20 w-20 rounded-md object-cover"
                   />
                   <div className="flex-1 space-y-2">
                     <div className="flex items-start justify-between">
-                      <h4 className="font-semibold text-sm line-clamp-1">{item.name}</h4>
+                      <h4 className="font-semibold text-sm line-clamp-1">{item.title}</h4>
                       <Button
                         variant="ghost"
                         size="icon"
@@ -78,7 +78,6 @@ export const Cart = ({ isOpen, onClose }: CartProps) => {
                         size="icon"
                         className="h-7 w-7"
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        disabled={item.quantity >= item.stock}
                       >
                         <Plus className="h-3 w-3" />
                       </Button>

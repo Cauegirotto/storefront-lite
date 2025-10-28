@@ -3,68 +3,52 @@ import { Header } from '@/components/Header';
 import { SearchBar } from '@/components/SearchBar';
 import { ProductCard } from '@/components/ProductCard';
 import { Cart } from '@/components/Cart';
-import { supabase } from '@/integrations/supabase/client';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
 import carouselPhone from '@/assets/carousel-phone.jpg';
 import carouselLaptop from '@/assets/carousel-laptop.jpg';
 import carouselPeripherals from '@/assets/carousel-peripherals.jpg';
+import { toast } from 'sonner';
+import { Product } from '@/types/product';
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState<'name' | 'price-asc' | 'price-desc'>('name');
 
   useEffect(() => {
     fetchProducts();
-    
-    // Realtime subscription for new products
-    const channel = supabase
-      .channel('products-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'products'
-        },
-        () => {
-          fetchProducts();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
   }, []);
 
   const fetchProducts = async () => {
-    setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('get-products');
+      setLoading(true);
+      const response = await fetch('https://fakestoreapi.com/products');
       
-      if (error) throw error;
-      
-      if (data?.success && data?.data) {
-        setProducts(data.data);
+      if (!response.ok) {
+        throw new Error('Erro ao buscar produtos');
       }
+
+      const data = await response.json();
+      setProducts(data);
     } catch (error) {
-      console.error('Erro ao buscar produtos:', error);
-      setProducts([]);
+      console.error('Error:', error);
+      toast.error('Erro ao carregar produtos');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const filteredProducts = products
     .filter((product) =>
-      product.stock > 0 && product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      product.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.description?.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .sort((a, b) => {
       if (sortBy === 'name') {
-        return a.name.localeCompare(b.name);
+        return a.title.localeCompare(b.title);
       } else if (sortBy === 'price-asc') {
         return Number(a.price) - Number(b.price);
       } else {
@@ -208,10 +192,7 @@ const Index = () => {
               {filteredProducts.map((product) => (
                 <ProductCard 
                   key={product.id} 
-                  product={{
-                    ...product,
-                    image: product.image_url || '/placeholder.svg'
-                  }} 
+                  product={product} 
                 />
               ))}
             </div>

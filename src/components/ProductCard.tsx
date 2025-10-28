@@ -17,15 +17,15 @@ export const ProductCard = ({ product }: ProductCardProps) => {
       <div className="aspect-square overflow-hidden bg-muted">
         <img
           src={product.image}
-          alt={product.name}
+          alt={product.title}
           className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
         />
       </div>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-2">
-          <CardTitle className="text-lg line-clamp-1">{product.name}</CardTitle>
+          <CardTitle className="text-lg line-clamp-1">{product.title}</CardTitle>
           <Badge variant="secondary" className="shrink-0">
-            {product.stock} un.
+            ★ {product.rating.rate}
           </Badge>
         </div>
         <CardDescription className="line-clamp-2">{product.description}</CardDescription>

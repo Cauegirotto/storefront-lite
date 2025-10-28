@@ -199,11 +199,11 @@ const Checkout = () => {
                   <div key={item.id} className="flex gap-4">
                     <img
                       src={item.image}
-                      alt={item.name}
+                      alt={item.title}
                       className="h-16 w-16 rounded-md object-cover"
                     />
                     <div className="flex-1 space-y-1">
-                      <h4 className="font-semibold text-sm line-clamp-1">{item.name}</h4>
+                      <h4 className="font-semibold text-sm line-clamp-1">{item.title}</h4>
                       <p className="text-sm text-muted-foreground">
                         Quantidade: {item.quantity}
                       </p>
