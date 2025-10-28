@@ -186,13 +186,22 @@ const Seller = () => {
   const handleDelete = async (productId: string) => {
     if (!confirm('Tem certeza que deseja excluir este produto?')) return;
 
+    console.log('Tentando excluir produto:', productId);
+    console.log('User ID:', user?.id);
+    
+    // Verificar se o produto pertence ao usuário
+    const product = products.find(p => p.id === productId);
+    console.log('Produto encontrado:', product);
+    console.log('Seller ID do produto:', product?.seller_id);
+
     const { error } = await supabase
       .from('products')
       .delete()
       .eq('id', productId);
 
     if (error) {
-      toast.error('Erro ao excluir produto');
+      console.error('Erro ao excluir produto:', error);
+      toast.error(`Erro ao excluir produto: ${error.message}`);
     } else {
       toast.success('Produto excluído com sucesso!');
       fetchProducts();
